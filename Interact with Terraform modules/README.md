@@ -1127,3 +1127,394 @@ Below is a comprehensive table listing all the Terraform commands that can be us
 
 ### **Summary**
 These commands provide a robust toolkit for interacting with Terraform modules, enabling you to initialize, plan, apply, and manage your infrastructure effectively. By mastering these commands, you can ensure that your Terraform configurations are modular, reusable, and maintainable.
+
+---
+
+Below is a detailed explanation of each Terraform command used with **Terraform Modules**, along with an example of how to use it in practice. These examples demonstrate the syntax and context for interacting with modules effectively.
+
+---
+
+### **1. `terraform init`**
+- **Purpose**: Initializes the working directory, downloading remote modules and setting up providers.
+- **Example**:
+  ```bash
+  terraform init
+  ```
+  - If you're using a remote module:
+    ```hcl
+    module "vpc" {
+      source  = "terraform-aws-modules/vpc/aws"
+      version = "3.0.0"
+    }
+    ```
+    Running `terraform init` will download the `terraform-aws-modules/vpc/aws` module from the Terraform Registry.
+
+---
+
+### **2. `terraform validate`**
+- **Purpose**: Validates the configuration files for syntax and consistency.
+- **Example**:
+  ```bash
+  terraform validate
+  ```
+  - This ensures that all module configurations (local or remote) are valid before applying changes.
+
+---
+
+### **3. `terraform plan`**
+- **Purpose**: Generates an execution plan showing what actions Terraform will take.
+- **Example**:
+  ```bash
+  terraform plan
+  ```
+  - For a module like this:
+    ```hcl
+    module "compute" {
+      source = "./modules/compute"
+
+      instance_type = "t2.micro"
+      subnet_id     = "subnet-12345678"
+    }
+    ```
+    The `terraform plan` command will show the resources Terraform will create, modify, or destroy within the `compute` module.
+
+---
+
+### **4. `terraform apply`**
+- **Purpose**: Applies the changes defined in the configuration files.
+- **Example**:
+  ```bash
+  terraform apply
+  ```
+  - Example with a local module:
+    ```hcl
+    module "database" {
+      source = "./modules/database"
+
+      db_name     = "mydb"
+      db_password = "securepassword"
+    }
+    ```
+    Running `terraform apply` will create the database resources defined in the `database` module.
+
+---
+
+### **5. `terraform destroy`**
+- **Purpose**: Destroys all resources created by the root module and child modules.
+- **Example**:
+  ```bash
+  terraform destroy
+  ```
+  - Example with a remote module:
+    ```hcl
+    module "s3-bucket" {
+      source  = "terraform-aws-modules/s3-bucket/aws"
+      version = "2.0.0"
+
+      bucket_name = "my-unique-bucket"
+    }
+    ```
+    Running `terraform destroy` will delete the S3 bucket created by the `s3-bucket` module.
+
+---
+
+### **6. `terraform refresh`**
+- **Purpose**: Updates the state file to reflect the current state of real-world resources.
+- **Example**:
+  ```bash
+  terraform refresh
+  ```
+  - Example with a module:
+    ```hcl
+    module "ec2-instance" {
+      source = "./modules/ec2"
+
+      ami           = "ami-12345678"
+      instance_type = "t2.micro"
+    }
+    ```
+    Running `terraform refresh` will sync the state file with the actual EC2 instance managed by the `ec2-instance` module.
+
+---
+
+### **7. `terraform output`**
+- **Purpose**: Displays outputs from the root module or child modules.
+- **Example**:
+  ```bash
+  terraform output
+  ```
+  - Example with a module:
+    ```hcl
+    module "vpc" {
+      source = "./modules/vpc"
+
+      cidr_block = "10.0.0.0/16"
+    }
+
+    output "vpc_id" {
+      value = module.vpc.vpc_id
+    }
+    ```
+    Running `terraform output` will display the `vpc_id` output from the `vpc` module.
+
+---
+
+### **8. `terraform taint`**
+- **Purpose**: Marks a resource as tainted, forcing it to be recreated on the next apply.
+- **Example**:
+  ```bash
+  terraform taint module.ec2-instance.aws_instance.example
+  ```
+  - Example with a module:
+    ```hcl
+    module "ec2-instance" {
+      source = "./modules/ec2"
+
+      ami           = "ami-12345678"
+      instance_type = "t2.micro"
+    }
+    ```
+    Running the command above will mark the `aws_instance.example` resource in the `ec2-instance` module as tainted.
+
+---
+
+### **9. `terraform untaint`**
+- **Purpose**: Removes the tainted status from a resource.
+- **Example**:
+  ```bash
+  terraform untaint module.ec2-instance.aws_instance.example
+  ```
+  - Example with a module:
+    ```hcl
+    module "ec2-instance" {
+      source = "./modules/ec2"
+
+      ami           = "ami-12345678"
+      instance_type = "t2.micro"
+    }
+    ```
+    Running the command above will remove the tainted status from the `aws_instance.example` resource in the `ec2-instance` module.
+
+---
+
+### **10. `terraform import`**
+- **Purpose**: Imports existing infrastructure into the Terraform state.
+- **Example**:
+  ```bash
+  terraform import module.s3-bucket.aws_s3_bucket.example my-existing-bucket
+  ```
+  - Example with a module:
+    ```hcl
+    module "s3-bucket" {
+      source = "./modules/s3"
+
+      bucket_name = "my-existing-bucket"
+    }
+    ```
+    Running the command above imports the existing S3 bucket into the `s3-bucket` module.
+
+---
+
+### **11. `terraform graph`**
+- **Purpose**: Generates a visual representation of the dependency graph.
+- **Example**:
+  ```bash
+  terraform graph | dot -Tsvg > graph.svg
+  ```
+  - Example with a module:
+    ```hcl
+    module "vpc" {
+      source = "./modules/vpc"
+
+      cidr_block = "10.0.0.0/16"
+    }
+
+    module "ec2-instance" {
+      source = "./modules/ec2"
+
+      subnet_id = module.vpc.public_subnet_id
+    }
+    ```
+    The command generates a dependency graph showing the relationship between the `vpc` and `ec2-instance` modules.
+
+---
+
+### **12. `terraform fmt`**
+- **Purpose**: Rewrites Terraform configuration files to a canonical format.
+- **Example**:
+  ```bash
+  terraform fmt
+  ```
+  - Example with a module:
+    ```hcl
+    module "vpc" {
+      source = "./modules/vpc"
+
+      cidr_block = "10.0.0.0/16"
+    }
+    ```
+    Running `terraform fmt` ensures consistent formatting for the `vpc` module's configuration files.
+
+---
+
+### **13. `terraform state list`**
+- **Purpose**: Lists all resources in the Terraform state file.
+- **Example**:
+  ```bash
+  terraform state list
+  ```
+  - Example with a module:
+    ```hcl
+    module "vpc" {
+      source = "./modules/vpc"
+
+      cidr_block = "10.0.0.0/16"
+    }
+    ```
+    The command lists all resources managed by the `vpc` module.
+
+---
+
+### **14. `terraform state show`**
+- **Purpose**: Shows detailed information about a specific resource in the state file.
+- **Example**:
+  ```bash
+  terraform state show module.vpc.aws_vpc.example
+  ```
+  - Example with a module:
+    ```hcl
+    module "vpc" {
+      source = "./modules/vpc"
+
+      cidr_block = "10.0.0.0/16"
+    }
+    ```
+    The command displays detailed information about the `aws_vpc.example` resource in the `vpc` module.
+
+---
+
+### **15. `terraform state rm`**
+- **Purpose**: Removes a resource from the Terraform state file.
+- **Example**:
+  ```bash
+  terraform state rm module.vpc.aws_vpc.example
+  ```
+  - Example with a module:
+    ```hcl
+    module "vpc" {
+      source = "./modules/vpc"
+
+      cidr_block = "10.0.0.0/16"
+    }
+    ```
+    The command removes the `aws_vpc.example` resource from the state file without destroying it in the real world.
+
+---
+
+### **16. `terraform state mv`**
+- **Purpose**: Moves a resource within the state file.
+- **Example**:
+  ```bash
+  terraform state mv module.old-vpc.aws_vpc.example module.new-vpc.aws_vpc.example
+  ```
+  - Example with a module:
+    ```hcl
+    module "old-vpc" {
+      source = "./modules/vpc"
+
+      cidr_block = "10.0.0.0/16"
+    }
+
+    module "new-vpc" {
+      source = "./modules/vpc"
+
+      cidr_block = "10.0.0.0/16"
+    }
+    ```
+    The command moves the `aws_vpc.example` resource from the `old-vpc` module to the `new-vpc` module.
+
+---
+
+### **17. `terraform workspace`**
+- **Purpose**: Manages workspaces for isolating state files.
+- **Example**:
+  ```bash
+  terraform workspace new dev
+  terraform workspace select dev
+  ```
+  - Example with a module:
+    ```hcl
+    module "vpc" {
+      source = "./modules/vpc"
+
+      cidr_block = "10.0.0.0/16"
+    }
+    ```
+    The commands create and switch to a `dev` workspace, isolating the state for the `vpc` module.
+
+---
+
+### **18. `terraform providers`**
+- **Purpose**: Lists the providers and their versions used in the configuration.
+- **Example**:
+  ```bash
+  terraform providers
+  ```
+  - Example with a module:
+    ```hcl
+    module "vpc" {
+      source = "./modules/vpc"
+
+      cidr_block = "10.0.0.0/16"
+    }
+    ```
+    The command lists the providers required by the `vpc` module.
+
+---
+
+### **19. `terraform login`**
+- **Purpose**: Logs in to Terraform Cloud or Enterprise for private module access.
+- **Example**:
+  ```bash
+  terraform login
+  ```
+  - Example with a private module:
+    ```hcl
+    module "private-module" {
+      source  = "app.terraform.io/example/private-module/aws"
+      version = "1.0.0"
+    }
+    ```
+    The command authenticates Terraform to access the private module hosted in Terraform Cloud.
+
+---
+
+### **20. `terraform logout`**
+- **Purpose**: Logs out of Terraform Cloud or Enterprise.
+- **Example**:
+  ```bash
+  terraform logout
+  ```
+  - Example:
+    ```bash
+    terraform logout
+    ```
+    The command removes stored credentials for Terraform Cloud or Enterprise.
+
+---
+
+### **21. `terraform version`**
+- **Purpose**: Displays the installed version of Terraform.
+- **Example**:
+  ```bash
+  terraform version
+  ```
+  - Example:
+    ```bash
+    terraform version
+    ```
+    The command checks the Terraform version to ensure compatibility with modules.
+
+---
+
+By understanding and practicing these commands, you can effectively interact with Terraform modules to manage your infrastructure as code. Each command plays a specific role in initializing, planning, applying, and maintaining modular configurations.
