@@ -13,4 +13,3 @@ Here's the content formatted as a table for your README file:
 | 8  | Read, generate, and modify configuration | 8a. Demonstrate use of variables and outputs  <br> 8b. Describe secure secret injection best practices  <br> 8c. Understand the use of collection and structural types  <br> 8d. Create and differentiate resource and data configuration  <br> 8e. Use resource addressing and resource parameters to connect resources together  <br> 8f. Use HCL and Terraform functions to write configuration  <br> 8g. Describe built-in dependency management (order of execution based) |
 | 9  | Understand HCP Terraform capabilities | 9a. Explain how HCP Terraform helps to manage infrastructure  <br> 9b. Describe how HCP Terraform enables collaboration and governance |
 
-Would you like any further refinements to this format? 😊
