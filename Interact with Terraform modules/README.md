@@ -1014,3 +1014,116 @@ By following these practices and methods, you can securely handle authentication
 ---
 
 By understanding these terms, you can better navigate and leverage Terraform modules to build scalable, maintainable, and reusable infrastructure as code.
+
+Below is a comprehensive table listing all the Terraform commands that can be used with **Terraform Modules**, along with their meanings and purposes. These commands help you interact with, manage, and troubleshoot modules effectively.
+
+---
+
+### **Terraform Commands for Interacting with Modules**
+
+| **Command**                     | **Meaning**                                                                                   | **Purpose**                                                                                                                                         |
+|----------------------------------|-----------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------|
+| `terraform init`                | Initializes the working directory and downloads modules.                                      | Prepares the environment by downloading remote modules, initializing providers, and setting up the backend.                                         |
+| `terraform validate`            | Validates the syntax and internal consistency of the configuration files.                    | Ensures that the module configurations are syntactically correct and internally consistent before applying changes.                                |
+| `terraform plan`                | Generates an execution plan showing what actions Terraform will take.                        | Previews the changes that Terraform will make to resources managed by modules, including additions, modifications, and deletions.                  |
+| `terraform apply`               | Applies the changes defined in the configuration files.                                       | Executes the planned changes to create, update, or delete resources defined in the modules.                                                         |
+| `terraform destroy`             | Destroys all resources defined in the configuration files.                                    | Removes all resources created by the root module and child modules, effectively cleaning up the infrastructure.                                     |
+| `terraform refresh`             | Updates the state file to reflect the current state of real-world resources.                 | Syncs the state file with the actual infrastructure without making any changes, useful for verifying module-managed resources.                      |
+| `terraform output`              | Displays outputs from the root module or child modules.                                       | Retrieves and displays the values of outputs defined in modules, such as resource IDs, IP addresses, or other attributes.                          |
+| `terraform taint`               | Marks a resource as tainted, forcing it to be destroyed and recreated on the next apply.      | Used to address issues with specific resources managed by a module by forcing them to be recreated during the next `apply`.                        |
+| `terraform untaint`             | Removes the tainted status from a resource.                                                  | Reverts a resource to its normal state without forcing recreation, useful after resolving issues flagged by `terraform taint`.                     |
+| `terraform import`              | Imports existing infrastructure into the Terraform state.                                     | Allows you to bring existing resources under Terraform's management, including those managed by modules.                                           |
+| `terraform graph`               | Generates a visual representation of the dependency graph.                                    | Creates a DOT-formatted graph of the relationships between modules and resources, helping to identify dependencies and troubleshoot issues.         |
+| `terraform fmt`                 | Rewrites Terraform configuration files to a canonical format.                                 | Ensures consistent formatting of module configuration files, improving readability and maintainability.                                             |
+| `terraform state list`          | Lists all resources in the Terraform state file.                                              | Displays all resources managed by the root module and child modules, useful for inspecting the state of your infrastructure.                       |
+| `terraform state show`          | Shows detailed information about a specific resource in the state file.                      | Provides detailed information about a resource managed by a module, including its attributes and current state.                                     |
+| `terraform state rm`            | Removes a resource from the Terraform state file.                                             | Deletes a resource from the state file without destroying it in the real world, useful for troubleshooting or re-importing resources.               |
+| `terraform state mv`            | Moves a resource within the state file.                                                       | Renames or relocates a resource within the state file, useful when refactoring modules or restructuring configurations.                            |
+| `terraform workspace`           | Manages workspaces for isolating state files.                                                | Allows you to use the same configuration for multiple environments (e.g., dev, staging, production) while keeping state files separate.            |
+| `terraform providers`           | Lists the providers and their versions used in the configuration.                             | Displays the providers required by the root module and child modules, including version constraints and installed versions.                         |
+| `terraform login`               | Logs in to Terraform Cloud or Enterprise for private module access.                           | Authenticates with Terraform Cloud or Enterprise to access private modules hosted in the Terraform Registry or private registries.                  |
+| `terraform logout`              | Logs out of Terraform Cloud or Enterprise.                                                   | Removes stored credentials for Terraform Cloud or Enterprise, useful for security or switching accounts.                                          |
+| `terraform version`             | Displays the installed version of Terraform.                                                  | Checks the version of Terraform being used, ensuring compatibility with modules and providers.                                                     |
+
+---
+
+### **Explanation of Key Commands**
+
+#### **1. Initialization (`terraform init`)**
+- **Purpose**: Downloads remote modules, initializes providers, and sets up the backend.
+- **Usage**:
+  ```bash
+  terraform init
+  ```
+- **Options**:
+  - `-upgrade`: Upgrades all modules and providers to the latest versions allowed by constraints.
+  - `-from-module=<SOURCE>`: Copies the source of a module into the current directory.
+
+#### **2. Planning Changes (`terraform plan`)**
+- **Purpose**: Previews changes without applying them, useful for reviewing module behavior.
+- **Usage**:
+  ```bash
+  terraform plan
+  ```
+- **Options**:
+  - `-out=<PLAN_FILE>`: Saves the plan to a file for later use with `terraform apply`.
+
+#### **3. Applying Changes (`terraform apply`)**
+- **Purpose**: Executes the changes to create, update, or delete resources defined in modules.
+- **Usage**:
+  ```bash
+  terraform apply
+  ```
+- **Options**:
+  - `-auto-approve`: Skips interactive approval of the plan.
+
+#### **4. Destroying Resources (`terraform destroy`)**
+- **Purpose**: Deletes all resources created by the root module and child modules.
+- **Usage**:
+  ```bash
+  terraform destroy
+  ```
+
+#### **5. Viewing Outputs (`terraform output`)**
+- **Purpose**: Displays outputs from modules, such as resource IDs or attributes.
+- **Usage**:
+  ```bash
+  terraform output
+  ```
+- **Options**:
+  - `-json`: Outputs results in JSON format.
+
+#### **6. Managing State (`terraform state`)**
+- **Purpose**: Inspects and manipulates the Terraform state file, which includes resources managed by modules.
+- **Commands**:
+  - `terraform state list`: Lists all resources.
+  - `terraform state show <RESOURCE_ADDRESS>`: Shows details of a specific resource.
+  - `terraform state rm <RESOURCE_ADDRESS>`: Removes a resource from the state file.
+  - `terraform state mv <SOURCE_ADDRESS> <DESTINATION_ADDRESS>`: Moves a resource within the state file.
+
+#### **7. Handling Workspaces (`terraform workspace`)**
+- **Purpose**: Manages isolated environments for different deployments (e.g., dev, staging, production).
+- **Commands**:
+  - `terraform workspace list`: Lists all workspaces.
+  - `terraform workspace new <WORKSPACE_NAME>`: Creates a new workspace.
+  - `terraform workspace select <WORKSPACE_NAME>`: Switches to an existing workspace.
+  - `terraform workspace delete <WORKSPACE_NAME>`: Deletes a workspace.
+
+#### **8. Debugging and Logging**
+- **Purpose**: Enables detailed logging to troubleshoot issues with modules.
+- **Environment Variable**:
+  ```bash
+  export TF_LOG=DEBUG
+  terraform apply
+  ```
+- **Log Levels**:
+  - `TRACE`
+  - `DEBUG`
+  - `INFO`
+  - `WARN`
+  - `ERROR`
+
+---
+
+### **Summary**
+These commands provide a robust toolkit for interacting with Terraform modules, enabling you to initialize, plan, apply, and manage your infrastructure effectively. By mastering these commands, you can ensure that your Terraform configurations are modular, reusable, and maintainable.
